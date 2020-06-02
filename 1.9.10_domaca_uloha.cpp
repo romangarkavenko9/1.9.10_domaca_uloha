@@ -45,13 +45,14 @@ void mat_random(MAT *mat){
 
 int main(){
 	
-	unsigned int a=2,b=2;
+	unsigned int a,b;
 	MAT* m;
-	
+	printf("zadaj pocet riadkov a pocet stlpcov:");
+	scanf("%d %d",&a,&b);
 	m=mat_create_with_type(a,b);
 	
-	m->cols=2;
-	m->rows=2;
+	m->cols=b;
+	m->rows=a;
 	mat_random(m);
 
 	mat_destroy(m);
