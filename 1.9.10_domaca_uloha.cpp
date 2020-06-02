@@ -6,7 +6,7 @@ typedef struct{
 	float *elem;
 }MAT;
 
-#define ELEM(M,r,c) (M.elem[(M.cols)*r+c])
+#define ELEM(M,r,c) (M->elem[(M->cols)*r+c])
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
@@ -27,15 +27,16 @@ void mat_destroy(MAT *mat){
 }
 
 void mat_random(MAT *mat){
+	
 	int i,j;
 	float a;
-	
+	float pole[mat->cols*mat->rows];
+	mat->elem=pole;
 		for(i=0;i<mat->rows;i++)
 		{
 			for(j=0;j<mat->cols;j++)
 			{
-				a=((float)rand() / (RAND_MAX))-0.5;
-				printf("%f ",a);	
+				ELEM(mat,i,j)=(rand()/(float)(RAND_MAX)) * 2 - 1;
 			}
 		}
 }
@@ -44,15 +45,15 @@ void mat_random(MAT *mat){
 
 int main(){
 	
-	unsigned int a=2,b=5;
+	unsigned int a=2,b=2;
 	MAT* m;
 	
 	m=mat_create_with_type(a,b);
 	
-	m->cols=5;
+	m->cols=2;
 	m->rows=2;
-	
 	mat_random(m);
+
 	mat_destroy(m);
 }
 
