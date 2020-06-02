@@ -25,13 +25,10 @@ free(mat);
 }
 
 void mat_random(MAT *mat){
-unsigned int rows,cols;
-MAT* s;
-s=mat_create_with_type( rows, cols);
 int i,j;
 float a;
-	for(i=0;i<rows;i++){
-		for(j=0;j<cols;j++){
+	for(i=0;i<mat->rows;i++){
+		for(j=0;j<mat->cols;j++){
 			a=((float)rand() / (RAND_MAX))-0.5;
 			printf("%f ",a);	
 		}
@@ -41,15 +38,13 @@ float a;
 
 
 int main(){
-unsigned int a,b;
+unsigned int a=2,b=5;
 MAT* m;
-int* c;
-a=3;
-b=2;
 m=mat_create_with_type(a,b);
+m->cols=5;
+m->rows=2;
 printf("%d",m);
 mat_random(m);
 mat_destroy(m);
-printf(" %d",m);
 }
 
