@@ -26,12 +26,34 @@ void mat_destroy(MAT *mat){
 	free(mat);
 }
 
+
+void mat_unit(MAT *mat){
+	
+	int i,j;
+
+		for(i=0;i<mat->rows;i++)
+		{
+			for(j=0;j<mat->cols;j++)
+			{
+				if(i==j)
+				{
+					ELEM(mat,i,j)= 1;
+				}
+				else
+				{
+					ELEM(mat,i,j)= 0;	
+				} 	
+	        
+			}
+			
+		}
+}
+
+
 void mat_random(MAT *mat){
 	
 	int i,j;
-	float a;
-	float pole[mat->cols*mat->rows];
-	mat->elem=pole;
+	
 		for(i=0;i<mat->rows;i++)
 		{
 			for(j=0;j<mat->cols;j++)
@@ -41,20 +63,47 @@ void mat_random(MAT *mat){
 		}
 }
 
-
+void mat_print(MAT *mat){
+	
+	int i,j;
+	mat_unit(mat);
+		for(i=0;i<mat->rows;i++)
+		{
+			for(j=0;j<mat->cols;j++)
+			{
+				printf(" %.f ",ELEM(mat,i,j));
+			}
+			
+			printf("\n");
+		}
+		printf("\n");
+	mat_random(mat);
+		for(i=0;i<mat->rows;i++)
+		{
+			for(j=0;j<mat->cols;j++)
+			{
+				printf(" %f ",ELEM(mat,i,j));
+			}
+			
+			printf("\n");
+		}
+}
 
 int main(){
 	
 	unsigned int a,b;
 	MAT* m;
+	
 	printf("zadaj pocet riadkov a pocet stlpcov:");
 	scanf("%d %d",&a,&b);
 	m=mat_create_with_type(a,b);
-	
 	m->cols=b;
 	m->rows=a;
-	mat_random(m);
+	
+	float pole[m->cols*m->rows];
+	m->elem=pole;
 
+	mat_print(m);
 	mat_destroy(m);
 }
 
