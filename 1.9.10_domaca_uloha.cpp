@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 typedef struct{
 	unsigned int rows;
 	unsigned int cols;
@@ -182,7 +183,7 @@ int g;
 
 
 int main(){
-	
+	srand(time(NULL));
 	unsigned int a,b;
 	float ad;
 	MAT* m;
