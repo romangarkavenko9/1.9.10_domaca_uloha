@@ -12,7 +12,7 @@ typedef struct{
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
-	MAT* m=(MAT*)malloc(sizeof(MAT)*rows*cols);
+	MAT* m=(MAT*)malloc(sizeof(float)*rows*cols);
 
 	if( m == NULL )
 	{
@@ -111,7 +111,6 @@ float det_pre_2x2(MAT *mat){
 }
 
 
-
 void swap(float *a, float *b) 
 { 
     float t = *a; 
@@ -120,63 +119,67 @@ void swap(float *a, float *b)
 } 
   
 
-
-
 float mat_determinant(MAT *mat){
   
 float cislo1,cislo2,det = 1,celok = 1;
-int g;    
+int g; 
+   
+float pole[mat->rows + 1];   
         
-      
-   float pole[mat->rows + 1];   
-        
-     
-    for(int i = 0; i < mat->rows; i++)    
-    {  
-        g = i;   
+    if (mat->rows==0 && mat->cols==0)
+	{
+	det=ELEM(mat,0,0);	
+	}
+	
+	else
+	{
+		for(int i = 0; i < mat->rows; i++)    
+    	{  
+        	g = i;   
             
-        while(ELEM(mat,g,i) == 0 && g < mat->rows) {   
-            g++;       
+        	while(ELEM(mat,g,i) == 0 && g < mat->rows) {   
+            	g++;       
                 
-        }   
-        if(g == mat->rows)   
-        {     
-            continue;          
-        }   
-        if(g != i)   
-        {     
-            for(int j = 0; j < mat->rows; j++)   
-            {   
-                swap(&ELEM(mat,g,j),&ELEM(mat,i,j));      
-            }   
+        	}   
+        	if(g == mat->rows)   
+        	{     
+            	continue;          
+        	}   
+        	if(g != i)   
+        	{     
+            	for(int j = 0; j < mat->rows; j++)   
+            	{   
+                	swap(&ELEM(mat,g,j),&ELEM(mat,i,j));      
+            	}   
                  
-                det = det*pow(-1,g-i);     
-       }   
+                	det = det*pow(-1,g-i);     
+       		}   
              
-       for(int j = 0; j < mat->rows; j++)   
-       {   
-           pole[j] = ELEM(mat,i,j);        
-       }   
+       		for(int j = 0; j < mat->rows; j++)   
+       		{   
+           		pole[j] = ELEM(mat,i,j);        
+       		}   
     
-       for(int j = i+1; j < mat->rows; j++)   
-       {   
-           cislo1 = pole[i];    
-           cislo2 = ELEM(mat,j,i);    
+       		for(int j = i+1; j < mat->rows; j++)   
+       		{   
+           		cislo1 = pole[i];    
+           		cislo2 = ELEM(mat,j,i);    
                   
-           for(int k = 0; k < mat->rows; k++)   
-           {      
-               ELEM(mat,j,k) = (cislo1 * ELEM(mat,j,k)) - (cislo2 * pole[k]);           
-           }   
-           celok = celok * cislo1;    
-           }   
+           		for(int k = 0; k < mat->rows; k++)   
+           		{      
+               		ELEM(mat,j,k) = (cislo1 * ELEM(mat,j,k)) - (cislo2 * pole[k]);           
+           		}   
+           	   		celok = celok * cislo1;    
+           	}   
             
-    }   
+    	}   
       
-    for(int i = 0; i < mat->rows; i++)   
-    {   
-        det = det * ELEM(mat,i,i);   
+    	for(int i = 0; i < mat->rows; i++)   
+    	{   
+        	det = det * ELEM(mat,i,i);   
             
-    }  
+    	} 
+	}
     return (det/celok);  
     }   
 
@@ -198,9 +201,13 @@ int main(){
 	m->elem=pole;
 
 	mat_print(m);
-	ad=mat_determinant(m);
-	printf("determinant matice= %.3f",ad);
-
+	
+	if(m->cols==m->rows)
+	{
+		ad=mat_determinant(m);
+		printf("determinant matice= %.3f",ad);
+	}
+	else printf("determinant sa neda vypocitat, matica nema tvar n*n");
 	mat_destroy(m);
 	
 }
