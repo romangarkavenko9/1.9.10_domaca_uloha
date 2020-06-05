@@ -14,10 +14,11 @@ MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
 	MAT* m=(MAT*)malloc(sizeof(MAT));
    	m->elem=(float*)malloc(sizeof(float)*rows*cols);
-	if( m == NULL )
+	if( m == NULL && m->elem == NULL )
 	{
-		free(m);
 		return NULL;
+		free(m);
+		free(m->elem);		
 	}
 	else
 	return m;
@@ -105,7 +106,7 @@ float mat_determinant(MAT *mat){
 	        
 	    if (mat->rows==0 && mat->cols==0)
 		{
-		det=ELEM(mat,0,0);	
+			det=ELEM(mat,0,0);	
 		}
 		
 		else
@@ -117,11 +118,13 @@ float mat_determinant(MAT *mat){
 	        	while(ELEM(mat,g,i) == 0 && g < mat->rows) 
 				{   
 	            	g++;       
-	            }   
+	            }
+				   
 	        	if(g == mat->rows)   
 	        	{     
 	            	continue;          
-	        	}   
+	        	} 
+				  
 	        	if(g != i)   
 	        	{     
 	            	for(int j = 0; j < mat->rows; j++)   
