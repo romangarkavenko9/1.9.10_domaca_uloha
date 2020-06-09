@@ -13,15 +13,19 @@ typedef struct{
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
 	MAT* m=(MAT*)malloc(sizeof(MAT));
-   	m->elem=(float*)malloc(sizeof(float)*rows*cols);
-	if( m == NULL && m->elem == NULL )
+	if( m == NULL ) 
 	{
-		return NULL;
-		free(m);
-		free(m->elem);		
+		return NULL;	
 	}
-	else
-	return m;
+	
+	m->elem=(float*)malloc(sizeof(float)*rows*cols);
+	if( m->elem == NULL )
+	{
+		free(m);
+		return NULL;			
+	}
+	
+	else return m;
 }
 
 void mat_destroy(MAT *mat){
@@ -36,22 +40,20 @@ void mat_unit(MAT *mat){
 	
 	int i,j;
 
-		for(i=0;i<mat->rows;i++)
+	for(i=0;i<mat->rows;i++)
+	{
+		for(j=0;j<mat->cols;j++)
 		{
-			for(j=0;j<mat->cols;j++)
+			if(i==j)
 			{
-				if(i==j)
-				{
-					ELEM(mat,i,j)= 1;
-				}
-				else
-				{
-					ELEM(mat,i,j)= 0;	
-				} 	
-	        
+				ELEM(mat,i,j)= 1;
 			}
-			
-		}
+			else
+			{
+				ELEM(mat,i,j)= 0;	
+			} 	 
+		}		
+	}
 }
 
 
@@ -59,43 +61,37 @@ void mat_random(MAT *mat){
 	
 	int i,j;
 	
-		for(i=0;i<mat->rows;i++)
+	for(i=0;i<mat->rows;i++)
+	{
+		for(j=0;j<mat->cols;j++)
 		{
-			for(j=0;j<mat->cols;j++)
-			{
-				ELEM(mat,i,j)=(rand()/(float)(RAND_MAX)) * 2 - 1;
-			}
+			ELEM(mat,i,j)=(rand()/(float)(RAND_MAX)) * 2 - 1;
 		}
+	}
 }
 
 void mat_print(MAT *mat){
 	
 	int i,j;
 	
-		for(i=0;i<mat->rows;i++)
-		{
-			for(j=0;j<mat->cols;j++)
-			{   if(ELEM(mat,i,j)<0)
-				{
+	for(i=0;i<mat->rows;i++)
+	{
+		for(j=0;j<mat->cols;j++)
+		{   
+			if(ELEM(mat,i,j)<0)
+			{
 				printf("%.3f  ",ELEM(mat,i,j));	
-				}
-				else
-				printf(" %.3f  ",ELEM(mat,i,j));
 			}
-			
-			printf("\n");
-		}
+			else
+			{
+				printf(" %.3f  ",ELEM(mat,i,j));
+			}		
+		}	
+		printf("\n");
+	}	
 	printf("\n");
 }
 
-
-
-void swap(float *a, float *b){ 
-    float t = *a; 
-    *a = *b; 
-    *b = t; 
-} 
-  
 
 float mat_determinant(MAT *mat){
   
@@ -113,28 +109,7 @@ float mat_determinant(MAT *mat){
 		{
 			for(int i = 0; i < mat->rows; i++)    
 	    	{  
-	        	g = i;   
-	            
-	        	while(ELEM(mat,g,i) == 0 && g < mat->rows) 
-				{   
-	            	g++;       
-	            }
-				   
-	        	if(g == mat->rows)   
-	        	{     
-	            	continue;          
-	        	} 
-				  
-	        	if(g != i)   
-	        	{     
-	            	for(int j = 0; j < mat->rows; j++)   
-	            	{   
-	                	swap(&ELEM(mat,g,j),&ELEM(mat,i,j));      
-	            	}   
-	                 
-	            	det = det*pow(-1,g-i);     
-	       		}   
-	             
+	        	   
 	       		for(int j = 0; j < mat->rows; j++)   
 	       		{   
 	           		pole[j] = ELEM(mat,i,j);        
