@@ -102,79 +102,81 @@ float mat_determinant(MAT *mat){
   
 	float cislo1,cislo2,det = 1,celok = 1;
 	int g,j=0,i=0; 
-   
+	float pomoc_matica[mat->rows][mat->cols];
+	
+	for(i=0;i<mat->rows;i++)
+	{
+		for(j=0;j<mat->cols;j++)
+		{
+			pomoc_matica[i][j]=ELEM(mat,i,j);
+		}	
+	}
+	
 	float* a; 
-	a = &ELEM(mat,i,j); 
+	a = &pomoc_matica[0][0]; 
 		
-		if(mat->cols!=mat->rows)
-		{
+	if(mat->cols!=mat->rows)
+	{
 		return 0;	
-		}
+	}
 	        
-	    if (mat->rows==1 && mat->cols==1)
-		{
-			det=ELEM(mat,0,0);
-			return det;	
-		}
-		if (mat->cols==0 && mat->rows==0)
-		{
-			return 0;	
-		}
-		
-		
-		
-		else
-		{
-			for(int i = 0; i < mat->rows; i++)    
-	    	{ 
-				g = i;   
+	if (mat->rows==1 && mat->cols==1)
+	{
+		det=pomoc_matica[0][0];
+		return det;	
+	}
+	
+	if (mat->cols==0 && mat->rows==0)
+	{
+		return 0;	
+	}
+			
+	else
+	{
+		for(int i = 0; i < mat->rows; i++)    
+	    { 
+			g = i;   
 
-	        	while(ELEM(mat,g,i) == 0 && g < mat->rows) 
-				{   
-	            	g++;       
-	            }
+	        while(pomoc_matica[g][i] == 0 && g < mat->rows) 
+			{   
+	            g++;       
+	        }
 
-	        	if(g == mat->rows)   
-	        	{     
-	            	continue;          
-	        	} 
-
-	        	if(g != i)   
-	        	{     
-	            	for(int j = 0; j < mat->rows; j++)   
-	            	{   
-	                	swap(&ELEM(mat,g,j),&ELEM(mat,i,j));      
-	            	}   
-
-	            	det = det*pow(-1,g-i);     
-	       		}    
-	        	   
-	           	        
-	       		   	    
-	       		for(int j = i+1; j < mat->rows; j++)   
-	       		{   
-	           		cislo1 = a[i];    
-	           		cislo2 = ELEM(mat,j,i);    
-	                  
-	           		for(int k = 0; k < mat->rows; k++)   
-	           		{      
-	               		ELEM(mat,j,k) = (cislo1 * ELEM(mat,j,k) - (cislo2 * a[k]));           
-	           		}
-					      
-	           	   	celok = celok * cislo1;    
-	           	}   
-	            
-	    	}   
-	      
-	    	for(int i = 0; i < mat->rows; i++)   
-	    	{   
-	        	det = det * ELEM(mat,i,i);   
+	        if(g == mat->rows)   
+	        {     
+	            continue;          
 	        } 
-		}
+
+	        if(g != i)   
+	        {     
+	            for(int j = 0; j < mat->rows; j++)   
+	            {   
+	                swap(&pomoc_matica[g][j],&pomoc_matica[i][j]);      
+	            }   
+	            det = det*pow(-1,g-i);     
+	       	}    
+	        	      	    
+	       	for(int j = i+1; j < mat->rows; j++)   
+	       	{   
+	           	cislo1 = a[i];    
+	           	cislo2 = pomoc_matica[j][i];    
+	                  
+	           	for(int k = 0; k < mat->rows; k++)   
+	           	{      
+	               	pomoc_matica[j][k] = (cislo1 * pomoc_matica[j][k] - (cislo2 * a[k]));           
+	           	}
+					      
+	           	celok = celok * cislo1;    
+	        }   	          
+	    }   
+			      
+	    for(int i = 0; i < mat->rows; i++)   
+	    {   
+	        det = det * pomoc_matica[i][i];   
+	    } 
+	}
 	return (det/celok);  
 }   
-
-
 
 int main(){
 	srand(time(NULL));
