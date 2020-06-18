@@ -9,6 +9,7 @@ typedef struct{
 }MAT;
 
 #define ELEM(M,r,c) (M->elem[(M->cols)*r+c])   
+#define P_M(M,r,c) (pomoc_matica[(M->cols)*r+c])
 
 MAT* mat_create_with_type(unsigned int rows, unsigned int cols){
 
@@ -102,18 +103,23 @@ float mat_determinant(MAT *mat){
   
 	float cislo1,cislo2,det = 1,celok = 1;
 	int g,j=0,i=0; 
-	float pomoc_matica[mat->rows][mat->cols];
+	float* pomoc_matica;
+	float* a; 
+	pomoc_matica=(float*)malloc(sizeof(float)*mat->rows*mat->cols);
+	if( pomoc_matica == NULL ) 
+	{
+		return NULL;	
+	}
+	
+	a = pomoc_matica; 
 	
 	for(i=0;i<mat->rows;i++)
 	{
 		for(j=0;j<mat->cols;j++)
 		{
-			pomoc_matica[i][j]=ELEM(mat,i,j);
+			P_M(mat,i,j)=ELEM(mat,i,j);
 		}	
 	}
-	
-	float* a; 
-	a = &pomoc_matica[0][0]; 
 		
 	if(mat->cols!=mat->rows)
 	{
@@ -122,7 +128,7 @@ float mat_determinant(MAT *mat){
 	        
 	if (mat->rows==1 && mat->cols==1)
 	{
-		det=pomoc_matica[0][0];
+		det=P_M(mat,0,0);
 		return det;	
 	}
 	
@@ -137,7 +143,7 @@ float mat_determinant(MAT *mat){
 	    { 
 			g = i;   
 
-	        while(pomoc_matica[g][i] == 0 && g < mat->rows) 
+	        while(P_M(mat,g,i) == 0 && g < mat->rows) 
 			{   
 	            g++;       
 	        }
@@ -151,7 +157,7 @@ float mat_determinant(MAT *mat){
 	        {     
 	            for(int j = 0; j < mat->rows; j++)   
 	            {   
-	                swap(&pomoc_matica[g][j],&pomoc_matica[i][j]);      
+	                swap(&P_M(mat,g,j),&P_M(mat,i,j));      
 	            }   
 	            det = det*pow(-1,g-i);     
 	       	}    
@@ -159,11 +165,11 @@ float mat_determinant(MAT *mat){
 	       	for(int j = i+1; j < mat->rows; j++)   
 	       	{   
 	           	cislo1 = a[i];    
-	           	cislo2 = pomoc_matica[j][i];    
+	           	cislo2 = P_M(mat,j,i);    
 	                  
 	           	for(int k = 0; k < mat->rows; k++)   
 	           	{      
-	               	pomoc_matica[j][k] = (cislo1 * pomoc_matica[j][k] - (cislo2 * a[k]));           
+	               	P_M(mat,j,k) = (cislo1 * P_M(mat,j,k) - (cislo2 * a[k]));           
 	           	}
 					      
 	           	celok = celok * cislo1;    
@@ -172,9 +178,10 @@ float mat_determinant(MAT *mat){
 			      
 	    for(int i = 0; i < mat->rows; i++)   
 	    {   
-	        det = det * pomoc_matica[i][i];   
+	        det = det * P_M(mat,i,i);   
 	    } 
 	}
+	free(pomoc_matica);
 	return (det/celok);  
 }   
 
